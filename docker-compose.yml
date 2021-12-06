@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx:1.21.4-alpine@sha256:12aa12ec4a8ca049537dd486044b966b0ba6cd8890c4c900ccb5e7e630e03df0
+    container_name: nginx
+    restart: always
+    volumes:
+      # Volume only for initial cert generation, comment it if cert is generated
+      - ./nginx/conf.d/initial.conf:/etc/nginx/conf.d/default.conf
+      # Comment it if cert is not yet generated
+      #- ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      # Certs volume
+      - ./nginx/certs:/etc/nginx/ssl
+      # Volume for certbot ACME challange
+      - ./certbot/data:/usr/share/nginx/html/letcsencrypt
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - appnetwork
+  app:
+    image: spring-boot-secured-app:latest
+    container_name: app
+    # Comment it if you deploy e.g VPS, not on a local machine
+    ports:
+      - 8080:8080
+    networks:
+      - appnetwork
+
+networks:
+  appnetwork:
