@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  certbot:
+    image: certbot/certbot:v1.21.0@sha256:b9e5b13507bccd9165dafb49a0588c58992d651cc497224cc6e2d3f415a1e7d7
+    container_name: certbot
+    command: certonly -v -n --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --agree-tos --email example.email@yourdomain.centralus.cloudapp.azure.com --no-eff-email -d lhvm2.centralus.cloudapp.azure.com
+    volumes:
+      - "./conf:/etc/letsencrypt"
+      - "./logs:/var/log/letsencrypt"
+      - "./data:/usr/share/nginx/html/letsencrypt"
