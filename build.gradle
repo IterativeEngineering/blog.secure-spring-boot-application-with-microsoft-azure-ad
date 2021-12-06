@@ -1,0 +1,36 @@
+plugins {
+	id "org.springframework.boot" version "2.5.0"
+	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+	id 'com.google.cloud.tools.jib' version '3.1.4'
+	id 'java'
+}
+
+group = 'pl.iterative'
+version = '1.0.0-SNAPSHOT'
+
+tasks.bootJar {
+	archiveFileName.set("spring-boot-secured-app.jar")
+}
+
+apply from: "gradle/docker.gradle"
+
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	gradlePluginPortal()
+	maven { url "https://repo.spring.io/plugins-release" }
+}
+
+dependencies {
+	//Spring boot
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//Azure
+	implementation 'com.azure.spring:azure-spring-boot-starter-active-directory:3.5.0'
+}
+
+test {
+	useJUnitPlatform()
+}
